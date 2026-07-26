@@ -106,7 +106,7 @@ def main() -> None:
             url_path=webhook_path,
             webhook_url=webhook_url,
             # Render terminates TLS; the bot listens plain HTTP internally.
-            allowed_updates=Update.ALL_TYPES,
+            allowed_updates=["message", "chat_member"],
         )
     else:
         # ── Polling mode (local dev) ──────────────────────────────────────────
