@@ -85,7 +85,7 @@ def build_application() -> Application:
         MessageHandler(filters.TEXT & ~filters.COMMAND, general.auto_reply),
         group=3,
     )
-    print("START HANDLER REGISTERED")
+    logger.warning("START HANDLER REGISTERED")
     return app
 
 
