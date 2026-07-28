@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 # ── /start ────────────────────────────────────────────────────────────────────
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    print("/start called")
     user = update.effective_user
     first_name = user.first_name if user else "there"
     await update.message.reply_text(
