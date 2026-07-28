@@ -94,6 +94,9 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     # Only auto-reply in private chats
     if message.chat.type != "private":
         return
+    # Ignore commands
+if message.text and message.text.startswith("/"):
+    return
 
     await message.reply_text(config.AUTO_REPLY_TEXT)
     storage.increment_stat("messages_handled")
