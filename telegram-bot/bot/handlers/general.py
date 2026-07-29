@@ -12,9 +12,13 @@ logger = logging.getLogger(__name__)
 
 # ── /start ────────────────────────────────────────────────────────────────────
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    print("/start called")
-    await update.message.reply_text("Bot Working ✅")
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.warning("/start called")
+
+    if update.message:
+        await update.message.reply_text("Bot Working ✅")
+    else:
+        logger.warning("update.message is None")
     
 
 
