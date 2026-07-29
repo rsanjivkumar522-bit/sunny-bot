@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 # ── /start ────────────────────────────────────────────────────────────────────
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.warning("/start called")
 
     if update.message:
