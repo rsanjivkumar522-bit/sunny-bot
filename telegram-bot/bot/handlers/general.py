@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print("/start called")
     await update.message.reply_text("Bot Working ✅")
-    )
+    
 
 
 
