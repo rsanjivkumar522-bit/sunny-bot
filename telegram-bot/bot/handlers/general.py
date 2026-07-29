@@ -14,20 +14,9 @@ logger = logging.getLogger(__name__)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print("/start called")
-    user = update.effective_user
-    first_name = user.first_name if user else "there"
-    await update.message.reply_text(
-        f"👋 Hello, {first_name}!\n\n"
-        "I'm your group management bot. Here's what I can do:\n\n"
-        "🤖 *Features*\n"
-        "• Auto-welcome new members\n"
-        "• Reply to keywords automatically\n"
-        "• Admin tools: warn, mute, kick, ban\n"
-        "• Broadcast messages to all groups\n\n"
-        "Use /help for the full command list.",
-        parse_mode="Markdown",
+    await update.message.reply_text("Bot Working ✅")
     )
-    storage.increment_stat("messages_handled")
+
 
 
 # ── /help ─────────────────────────────────────────────────────────────────────
