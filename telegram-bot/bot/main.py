@@ -42,7 +42,7 @@ def build_application() -> Application:
     #  app.add_handler(
     #  MessageHandler(filters.ALL, _track_chat(app)),
     #  group=0,
-    )
+    #  )
 
     # ── General commands ──────────────────────────────────────────────────────
     app.add_handler(CommandHandler("start",           general.start))
