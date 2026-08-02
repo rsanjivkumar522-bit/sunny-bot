@@ -39,9 +39,9 @@ def build_application() -> Application:
     app = Application.builder().token(config.BOT_TOKEN).build()
 
     # ── Track chats (runs first via group 0) ─────────────────────────────────
-    app.add_handler(
-        MessageHandler(filters.ALL, _track_chat(app)),
-        group=0,
+    #  app.add_handler(
+    #  MessageHandler(filters.ALL, _track_chat(app)),
+    #  group=0,
     )
 
     # ── General commands ──────────────────────────────────────────────────────
