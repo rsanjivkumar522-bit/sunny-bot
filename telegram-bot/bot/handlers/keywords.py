@@ -18,7 +18,7 @@ async def handle_keyword_reply(update: Update, context: ContextTypes.DEFAULT_TYP
     message = update.message
     
     if not message or not message.text:
-        retrun
+        return
         
     text_lower = message.text.lower()
     
