@@ -5,7 +5,7 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from bot import storage
+from bot import storage, config
 
 logger = logging.getLogger(__name__)
 
@@ -17,9 +17,19 @@ async def handle_keyword_reply(update: Update, context: ContextTypes.DEFAULT_TYP
     """
     message = update.message
     if not message or not message.text:
-        return
-
     text_lower = message.text.lower()
+    # Anti-Link 
+    if config.ANTI_LINK:
+        if (
+            "http://" in text_lower
+            or "https://" in text_lower
+            or "t.me/" in text_lower
+            or "telegram.me/" in text_lower
+            or "www." in text_lower
+        ):
+            await message.delete()
+            await message.reply_text("🚫 Links are not allowed in this group.")
+            return
     keywords = storage.get_keywords()
 
     for keyword, reply in keywords.items():
