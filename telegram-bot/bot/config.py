@@ -58,3 +58,5 @@ DEFAULT_KEYWORDS: dict[str, str] = {
     "thanks": "😊 You're welcome! Anything else I can help with?",
     "thank you": "😊 You're very welcome! Happy to help.",
 }
+    # Anti-Link
+ANTI_LINK = True
