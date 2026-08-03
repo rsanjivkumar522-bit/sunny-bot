@@ -16,8 +16,12 @@ async def handle_keyword_reply(update: Update, context: ContextTypes.DEFAULT_TYP
     and reply with the configured response for the first match found.
     """
     message = update.message
+    
     if not message or not message.text:
+        retrun
+        
     text_lower = message.text.lower()
+    
     # Anti-Link 
     if config.ANTI_LINK:
         if (
