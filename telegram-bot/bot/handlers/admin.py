@@ -2,6 +2,7 @@
 Admin command handlers — warn, mute, kick, ban, broadcast, and keyword management.
 """
 import logging
+import asyncio
 from telegram import Update, ChatPermissions
 from telegram.error import BadRequest
 from telegram.ext import ContextTypes, ConversationHandler
@@ -12,6 +13,18 @@ from bot.decorators import admin_only, global_admin_only
 logger = logging.getLogger(__name__)
 
 MAX_WARNS = 3  # auto-kick after this many warnings
+
+# ── Name Changer ─────────────────────────────────────────
+
+NC_RUNNING = {}
+NC_TASKS = {}
+
+NC_NAMES = [
+    "🔥 Name 1 🔥",
+    "⚡ Name 2 ⚡",
+    "👑 Name 3 👑",
+    "💀 Name 4 💀",
+]
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
