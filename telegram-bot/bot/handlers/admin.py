@@ -25,6 +25,32 @@ NC_NAMES = [
     "👑 Name 3 👑",
     "💀 Name 4 💀",
 ]
+async def nc_loop(context, chat_id):
+    while NC_RUNNING.get(chat_id, False):
+        for name in NC_NAMES:
+            if not NC_RUNNING.get(chat_id, False):
+                break
+
+            try:
+                await context.bot.set_chat_title(chat_id, name)
+            except Exception as e:
+                logger.error(f"NC Error: {e}")
+
+            await asyncio.sleep(3)
+
+
+@admin_only
+async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+
+    if NC_RUNNING.get(chat_id):
+        await update.message.reply_text("⚠️ Name Changer is already running.")
+        return
+
+    NC_RUNNING[chat_id] = True
+    NC_TASKS[chat_id] = asyncio.create_task(nc_loop(context, chat_id))
+
+    await update.message.reply_text("✅ Name Changer Started (3 sec).")
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
