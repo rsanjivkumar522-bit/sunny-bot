@@ -40,20 +40,17 @@ async def nc_loop(context, chat_id):
 
 
 @admin_only
-async def ncstop(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
-    if not NC_RUNNING.get(chat_id):
-        await update.message.reply_text("⚠️ Name Changer is not running.")
+    if NC_RUNNING.get(chat_id):
+        await update.message.reply_text("⚠️ Name Changer is already running.")
         return
 
-    NC_RUNNING[chat_id] = False
+    NC_RUNNING[chat_id] = True
+    NC_TASKS[chat_id] = asyncio.create_task(nc_loop(context, chat_id))
 
-    if chat_id in NC_TASKS:
-        NC_TASKS[chat_id].cancel()
-        del NC_TASKS[chat_id]
-
-    await update.message.reply_text("🛑 Name Changer Stopped.")
+    await update.message.reply_text("✅ Name Changer Started.")
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
