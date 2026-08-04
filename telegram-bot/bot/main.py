@@ -63,9 +63,8 @@ def build_application() -> Application:
     app.add_handler(CommandHandler("removekeyword",   admin.remove_keyword))
     app.add_handler(CommandHandler("stats",           admin.stats))
     app.add_handler(CommandHandler("broadcast", admin.broadcast))
-    app.add_handler(CommandHandler("ncstart", admin.start_nc))
-    app.add_handler(CommandHandler("ncstop", admin.stop_nc))
-    
+    app.add_handler(CommandHandler("ncstart", admin.ncstart))
+    app.add_handler(CommandHandler("ncstop", admin.ncstop))
     
 
     # ── Group events ──────────────────────────────────────────────────────────
