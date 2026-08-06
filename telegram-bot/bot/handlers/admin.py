@@ -40,10 +40,6 @@ async def nc_loop(context, chat_id):
 
 @admin_only
 async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-
-@admin_only
-async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
     if NC_RUNNING.get(chat_id):
