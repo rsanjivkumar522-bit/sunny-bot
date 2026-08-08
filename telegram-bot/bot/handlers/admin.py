@@ -26,15 +26,13 @@ NC_NAMES = [
     "💀 Name 4 💀",
 ]
 async def nc_loop(context, chat_id, base_name):
-    if not NC_RUNNING.get(chat_id, False):
-    return
+    while NC_RUNNING.get(chat_id, False):
+        try:
+            await context.bot.set_chat_title(chat_id, base_name)
+        except Exception as e:
+            logger.error(f"NC Error: {e}")
 
-try:
-    await context.bot.set_chat_title(chat_id, base_name)
-except Exception as e:
-    logger.error(f"NC Error: {e}")
-
-await asyncio.sleep(3)
+        await asyncio.sleep(3)
 
 @admin_only
 async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
