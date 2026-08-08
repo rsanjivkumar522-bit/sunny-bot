@@ -38,16 +38,16 @@ async def nc_loop(context, chat_id, base_name):
 async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
-    base_name = " ".join(context.args)
-
     if NC_RUNNING.get(chat_id):
         await update.message.reply_text("⚠️ Name Changer is already running.")
         return
-    
+
     if not context.args:
-    await update.message.reply_text("Usage: /ncstart <text>")
-    return
-    
+        await update.message.reply_text("Usage: /ncstart <text>")
+        return
+
+    base_name = " ".join(context.args)
+
     NC_RUNNING[chat_id] = True
 
     task = asyncio.create_task(nc_loop(context, chat_id, base_name))
