@@ -25,14 +25,15 @@ NC_NAMES = [
     "👑 Name 3 👑",
     "💀 Name 4 💀",
 ]
-async def nc_loop(context, chat_id):
+async def nc_loop(context, chat_id, base_name):
     while NC_RUNNING.get(chat_id, False):
-        for name in NC_NAMES:
+        for style in NC_NAMES:
             if not NC_RUNNING.get(chat_id, False):
                 break
 
             try:
-                await context.bot.set_chat_title(chat_id, name)
+                title = style.replace("Name", base_name)
+                await context.bot.set_chat_title(chat_id, title)
             except Exception as e:
                 logger.error(f"NC Error: {e}")
 
