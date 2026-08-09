@@ -15,7 +15,11 @@ def _parse_admin_ids(raw: str) -> list[int]:
 
 
 # ── Required ────────────────────────────────────────────────────────────────
-BOT_TOKEN: str = os.environ["BOT_TOKEN"]
+BOT_TOKENS: list[str] = [
+    token.strip()
+    for token in os.environ["BOT_TOKENS"].split(",")
+    if token.strip()
+]
 
 # ── Deployment ───────────────────────────────────────────────────────────────
 # On Render, set WEBHOOK_URL to your service's public URL
