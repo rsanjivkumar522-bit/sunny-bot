@@ -19,13 +19,8 @@ MAX_WARNS = 3  # auto-kick after this many warnings
 NC_RUNNING = {}
 NC_TASKS = {}
 
-NC_NAMES = [
-    "🔥 Name 1 🔥",
-    "⚡ Name 2 ⚡",
-    "👑 Name 3 👑",
-    "💀 Name 4 💀",
-]
-async def nc_loop(context, chat_id, base_name):
+
+async def nc_loop(context, bot_id, chat_id, base_name):
     names = [
         f"🔥 {base_name} 🔥",
         f"⚡ {base_name} ⚡",
@@ -33,54 +28,96 @@ async def nc_loop(context, chat_id, base_name):
         f"💀 {base_name} 💀",
     ]
 
-    while NC_RUNNING.get(chat_id, False):
+    key = (bot_id, chat_id)
+
+    while NC_RUNNING.get(key, False):
         for name in names:
-            if not NC_RUNNING.get(chat_id, False):
+            if not NC_RUNNING.get(key, False):
                 break
 
             try:
                 await context.bot.set_chat_title(chat_id, name)
+
+                logger.info(
+                    "Bot %s changed chat %s title to %s",
+                    bot_id,
+                    chat_id,
+                    name,
+                )
+
             except Exception as e:
-                logger.error(f"NC Error: {e}")
+                logger.error(
+                    "NC Error | bot=%s chat=%s: %s",
+                    bot_id,
+                    chat_id,
+                    e,
+                )
 
             await asyncio.sleep(3)
+
 
 @admin_only
 async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
+    bot_id = context.bot.id
 
-    if NC_RUNNING.get(chat_id):
-        await update.message.reply_text("⚠️ Name Changer is already running.")
+    key = (bot_id, chat_id)
+
+    if NC_RUNNING.get(key):
+        await update.message.reply_text(
+            "⚠️ Name Changer is already running for this bot."
+        )
         return
 
     if not context.args:
-        await update.message.reply_text("Usage: /ncstart <text>")
+        await update.message.reply_text(
+            "Usage: /ncstart <text>"
+        )
         return
 
     base_name = " ".join(context.args)
 
-    NC_RUNNING[chat_id] = True
+    NC_RUNNING[key] = True
 
-    task = asyncio.create_task(nc_loop(context, chat_id, base_name))
-    NC_TASKS[chat_id] = task
+    task = asyncio.create_task(
+        nc_loop(
+            context,
+            bot_id,
+            chat_id,
+            base_name,
+        )
+    )
 
-    await update.message.reply_text("✅ Name Changer Started.")
+    NC_TASKS[key] = task
+
+    await update.message.reply_text(
+        "✅ Name Changer Started."
+    )
+
 
 @admin_only
 async def ncstop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
+    bot_id = context.bot.id
 
-    if not NC_RUNNING.get(chat_id):
-        await update.message.reply_text("⚠️ Name Changer is not running.")
+    key = (bot_id, chat_id)
+
+    if not NC_RUNNING.get(key):
+        await update.message.reply_text(
+            "⚠️ Name Changer is not running for this bot."
+        )
         return
 
-    NC_RUNNING[chat_id] = False
+    NC_RUNNING[key] = False
 
-    task = NC_TASKS.pop(chat_id, None)
+    task = NC_TASKS.pop(key, None)
+
     if task:
         task.cancel()
 
-    await update.message.reply_text("🛑 Name Changer Stopped.")
+    await update.message.reply_text(
+        "🛑 Name Changer Stopped."
+    )
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
