@@ -43,6 +43,7 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("removekeyword", admin.remove_keyword))
     app.add_handler(CommandHandler("stats", admin.stats))
     app.add_handler(CommandHandler("broadcast", admin.broadcast))
+    app.add_handler(CommandHandler("coin", general.coin))
 
     # ── Name Changer ─────────────────────────────────────────────────
     app.add_handler(CommandHandler("ncstart", admin.ncstart))
