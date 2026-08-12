@@ -54,6 +54,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # ── /dice ─────────────────────────────────────────────────────────────────────
 
+# ── /coin ─────────────────────────────────────────────────────────────────────
+
+async def coin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    result = random.choice(["Heads 🪙", "Tails 🪙"])
+    await update.message.reply_text(f"🪙 {result}")
+
 async def dice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     number = random.randint(1, 6)
     await update.message.reply_text(f"🎲 You rolled: {number}")
