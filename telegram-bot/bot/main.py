@@ -28,6 +28,7 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("help", general.help_command))
     app.add_handler(CommandHandler("ping", general.ping))
     app.add_handler(CommandHandler("keywords", general.list_keywords))
+    app.add_handler(CommandHandler("dice", general.dice))
 
     # ── Admin commands ───────────────────────────────────────────────
     app.add_handler(CommandHandler("warn", admin.warn_user))
