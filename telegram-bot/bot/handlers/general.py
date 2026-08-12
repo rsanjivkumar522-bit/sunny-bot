@@ -2,10 +2,9 @@
 General command and auto-reply handlers.
 """
 import logging
+import random
 from telegram import Update
 from telegram.ext import ContextTypes
-
-from bot import config, storage
 
 logger = logging.getLogger(__name__)
 
