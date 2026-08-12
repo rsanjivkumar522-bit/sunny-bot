@@ -52,6 +52,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # ── /ping ─────────────────────────────────────────────────────────────────────
 
+# ── /dice ─────────────────────────────────────────────────────────────────────
+
+async def dice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    number = random.randint(1, 6)
+    await update.message.reply_text(f"🎲 You rolled: {number}")
+
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("🏓 Pong! I'm alive and kicking.")
 
