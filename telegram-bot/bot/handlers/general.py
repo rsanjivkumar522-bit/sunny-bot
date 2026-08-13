@@ -78,28 +78,44 @@ async def song(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         ydl_opts = {
-            "format": "bestaudio/best",
+            "format": "bestaudio[ext=m4a]/bestaudio",
             "noplaylist": True,
             "quiet": True,
             "outtmpl": "song.%(ext)s",
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(
+            search = ydl.extract_info(
                 f"ytsearch1:{query}",
+                download=False,
+            )
+
+            if not search.get("entries"):
+                await update.message.reply_text(
+                    "❌ Song nahi mila."
+                )
+                return
+
+            info = search["entries"][0]
+
+            info = ydl.extract_info(
+                info["webpage_url"],
                 download=True,
             )
+
             filename = ydl.prepare_filename(info)
 
-        await update.message.reply_audio(
-            audio=open(filename, "rb"),
-            title=info.get("title", query),
-        )
+        with open(filename, "rb") as audio:
+            await update.message.reply_audio(
+                audio=audio,
+                title=info.get("title", query),
+                performer=info.get("uploader"),
+            )
 
     except Exception as e:
         logger.error("Song error: %s", e)
         await update.message.reply_text(
-            "❌ Song nahi mil paya."
+            "❌ Song download nahi ho paya."
         )
 
 async def eight_ball(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
