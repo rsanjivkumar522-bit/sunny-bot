@@ -1,2 +1,4 @@
 python-telegram-bot[webhooks]==21.6
 httpx==0.27.2
+yt-dlp
+PyTgCalls
