@@ -59,6 +59,47 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # ── /8ball ────────────────────────────────────────────────────────────────────
 
+# ── /song ─────────────────────────────────────────────────────────────────────
+
+async def song(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not context.args:
+        await update.message.reply_text(
+            "🎵 Song ka naam likho.\n\nExample:\n/song Kesariya"
+        )
+        return
+
+    query = " ".join(context.args)
+
+    await update.message.reply_text(
+        f"🔎 Searching: {query}..."
+    )
+
+    try:
+        ydl_opts = {
+            "format": "bestaudio/best",
+            "noplaylist": True,
+            "quiet": True,
+            "outtmpl": "song.%(ext)s",
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(
+                f"ytsearch1:{query}",
+                download=True,
+            )
+            filename = ydl.prepare_filename(info)
+
+        await update.message.reply_audio(
+            audio=open(filename, "rb"),
+            title=info.get("title", query),
+        )
+
+    except Exception as e:
+        logger.error("Song error: %s", e)
+        await update.message.reply_text(
+            "❌ Song nahi mil paya."
+        )
+
 async def eight_ball(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     answers = [
         "🎱 Yes, definitely!",
