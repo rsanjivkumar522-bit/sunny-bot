@@ -30,6 +30,7 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("keywords", general.list_keywords))
     app.add_handler(CommandHandler("dice", general.dice))
     app.add_handler(CommandHandler("8ball", general.eight_ball))
+    app.add_handler(CommandHandler("song", general.song))
     
     # ── Admin commands ───────────────────────────────────────────────
     app.add_handler(CommandHandler("warn", admin.warn_user))
