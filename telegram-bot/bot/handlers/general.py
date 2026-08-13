@@ -5,6 +5,7 @@ import logging
 import random
 from telegram import Update
 from telegram.ext import ContextTypes
+import yt_dlp
 
 logger = logging.getLogger(__name__)
 
