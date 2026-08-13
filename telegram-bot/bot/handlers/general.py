@@ -7,6 +7,8 @@ from telegram import Update
 from telegram.ext import ContextTypes
 import yt_dlp
 
+from bot import config, storage
+
 logger = logging.getLogger(__name__)
 
 
