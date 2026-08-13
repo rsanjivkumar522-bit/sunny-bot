@@ -56,6 +56,23 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # ── /coin ─────────────────────────────────────────────────────────────────────
 
+# ── /8ball ────────────────────────────────────────────────────────────────────
+
+async def eight_ball(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    answers = [
+        "🎱 Yes, definitely!",
+        "🎱 It is certain.",
+        "🎱 Most likely.",
+        "🎱 Maybe 🤔",
+        "🎱 Ask again later.",
+        "🎱 Probably not.",
+        "🎱 No ❌",
+        "🎱 Don't count on it."
+    ]
+
+    answer = random.choice(answers)
+    await update.message.reply_text(answer)
+
 async def coin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     result = random.choice(["Heads 🪙", "Tails 🪙"])
     await update.message.reply_text(f"🪙 {result}")
