@@ -10,6 +10,8 @@ from google import genai
 
 from bot import config, storage
 
+client = genai.Client(api_key=config.GEMINI_API_KEY)
+
 logger = logging.getLogger(__name__)
 
 
