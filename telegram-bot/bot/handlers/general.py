@@ -161,6 +161,31 @@ async def list_keywords(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     text = "*🔑 Active Keyword Triggers*\n\n" + "\n".join(lines)
     await update.message.reply_text(text, parse_mode="Markdown")
 
+async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    message = update.message
+
+    if not message or not message.text:
+        return
+
+    if message.chat.type != "private":
+        return
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=message.text,
+        )
+
+        reply = response.text
+
+        if reply:
+            await message.reply_text(reply)
+
+    except Exception as e:
+        logger.error("Gemini AI error: %s", e)
+        await message.reply_text(
+            "😕 Abhi AI response nahi de pa raha. Thodi der baad try karo."
+        )
 
 # ── Auto-reply (private chats) ────────────────────────────────────────────────
 
