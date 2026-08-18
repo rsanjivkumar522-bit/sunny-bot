@@ -6,6 +6,7 @@ import random
 from telegram import Update
 from telegram.ext import ContextTypes
 import yt_dlp
+from google import genai
 
 from bot import config, storage
 
