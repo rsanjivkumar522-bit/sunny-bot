@@ -64,3 +64,6 @@ DEFAULT_KEYWORDS: dict[str, str] = {
 }
     # Anti-Link
 ANTI_LINK = True
+
+# ── Gemini AI ───────────────────────────────────────────────────────────────
+GEMINI_API_KEY: str = os.environ.get("GEMINI_API_KEY", "")
