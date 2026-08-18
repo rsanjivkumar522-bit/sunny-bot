@@ -77,6 +77,15 @@ def build_application(token: str) -> Application:
         group=2,
     )
 
+# ── Gemini AI ────────────────────────────────────────────────────
+app.add_handler(
+    MessageHandler(
+        filters.TEXT & ~filters.COMMAND,
+        general.ai_reply,
+    ),
+    group=3,
+)
+
     # ── Auto reply ───────────────────────────────────────────────────
     app.add_handler(
         MessageHandler(
