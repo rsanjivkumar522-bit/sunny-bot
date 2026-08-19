@@ -171,8 +171,10 @@ async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
+        # 1. client.aio use karo (Async)
+        # 2. Valid model name use karo
+        response = await client.aio.models.generate_content(
+            model="gemini-2.0-flash",
             contents=message.text,
         )
 
