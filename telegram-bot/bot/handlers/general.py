@@ -170,7 +170,7 @@ async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if message.chat.type != "private":
         return
 
-            try:
+    try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=message.text,
