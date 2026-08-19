@@ -176,12 +176,10 @@ async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             contents=message.text,
         )
 
-        reply = response.text
-
-        if reply:
+                if reply:
             await message.reply_text(reply)
 
-        except Exception as e:
+    except Exception as e:
         logger.exception("Gemini AI ERROR")
         await message.reply_text(
             "😕 Abhi AI response nahi de pa raha. Thodi der baad try karo."
