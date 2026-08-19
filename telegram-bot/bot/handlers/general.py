@@ -181,15 +181,11 @@ async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if reply:
             await message.reply_text(reply)
 
-    except Exception:
-    logger.exception("Gemini AI ERROR")
-    print("GEMINI AI ERROR:", flush=True)
-    import traceback
-    traceback.print_exc()
-
-    await message.reply_text(
-        "😕 Abhi AI response nahi de pa raha. Thodi der baad try karo."
-    )
+        except Exception as e:
+        logger.exception("Gemini AI ERROR")
+        await message.reply_text(
+            "😕 Abhi AI response nahi de pa raha. Thodi der baad try karo."
+        )
 
 # ── Auto-reply (private chats) ────────────────────────────────────────────────
 
