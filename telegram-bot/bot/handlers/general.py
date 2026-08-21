@@ -115,10 +115,10 @@ async def song(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 performer=info.get("uploader"),
             )
 
-    except Exception as e:
-        logger.error("Song error: %s", e)
-        await update.message.reply_text(
-            "❌ Song download nahi ho paya."
+        except Exception as e:
+        logger.exception("Gemini AI ERROR")
+        await message.reply_text(
+            f"❌ Gemini Error:\n{type(e).__name__}: {e}"
         )
 
 async def eight_ball(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
