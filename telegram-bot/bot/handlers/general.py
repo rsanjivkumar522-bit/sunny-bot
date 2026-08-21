@@ -115,10 +115,59 @@ async def song(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 performer=info.get("uploader"),
             )
 
-        except Exception as e:
-        logger.exception("Gemini AI ERROR")
-        await message.reply_text(
-            f"❌ Gemini Error:\n{type(e).__name__}: {e}"
+        async def song(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not context.args:
+        await update.message.reply_text(
+            "🎵 Song ka naam likho.\n\nExample:\n/song Kesariya"
+        )
+        return
+
+    query = " ".join(context.args)
+
+    await update.message.reply_text(
+        f"🔎 Searching: {query}..."
+    )
+
+    try:
+        ydl_opts = {
+            "format": "bestaudio[ext=m4a]/bestaudio",
+            "noplaylist": True,
+            "quiet": True,
+            "outtmpl": "song.%(ext)s",
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            search = ydl.extract_info(
+                f"ytsearch1:{query}",
+                download=False,
+            )
+
+            if not search.get("entries"):
+                await update.message.reply_text(
+                    "❌ Song nahi mila."
+                )
+                return
+
+            info = search["entries"][0]
+
+            info = ydl.extract_info(
+                info["webpage_url"],
+                download=True,
+            )
+
+            filename = ydl.prepare_filename(info)
+
+        with open(filename, "rb") as audio:
+            await update.message.reply_audio(
+                audio=audio,
+                title=info.get("title", query),
+                performer=info.get("uploader"),
+            )
+
+    except Exception as e:
+        logger.exception("Song error: %s", e)
+        await update.message.reply_text(
+            f"❌ Song error:\n{type(e).__name__}: {e}"
         )
 
 async def eight_ball(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
