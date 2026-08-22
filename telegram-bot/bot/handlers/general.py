@@ -161,7 +161,6 @@ async def list_keywords(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     text = "*🔑 Active Keyword Triggers*\n\n" + "\n".join(lines)
     await update.message.reply_text(text, parse_mode="Markdown")
 
-app.add_handler(CommandHandler("ai", general.ai_command))
 
 # ── Auto-reply (private chats) ────────────────────────────────────────────────
 
