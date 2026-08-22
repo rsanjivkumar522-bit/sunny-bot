@@ -161,6 +161,44 @@ async def list_keywords(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     text = "*🔑 Active Keyword Triggers*\n\n" + "\n".join(lines)
     await update.message.reply_text(text, parse_mode="Markdown")
 
+# ── Gemini /ai command ───────────────────────────────────────────────────────
+
+async def ai_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    message = update.message
+
+    if not message:
+        return
+
+    if not context.args:
+        await message.reply_text(
+            "🤖 AI ko message do.\n\nExample:\n/ai hello bhai"
+        )
+        return
+
+    prompt = " ".join(context.args)
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=prompt,
+        )
+
+        reply = response.text
+
+        if not reply:
+            await message.reply_text("❌ Gemini ne empty response diya.")
+            return
+
+        # Telegram 4096 character limit
+        for i in range(0, len(reply), 4096):
+            await message.reply_text(reply[i:i + 4096])
+
+    except Exception as e:
+        logger.exception("Gemini AI ERROR: %s", e)
+        await message.reply_text(
+            f"❌ Gemini Error:\n{type(e).__name__}: {e}"
+        )
+
 
 # ── Auto-reply (private chats) ────────────────────────────────────────────────
 
