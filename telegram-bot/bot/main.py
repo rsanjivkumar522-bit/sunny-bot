@@ -31,6 +31,7 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("dice", general.dice))
     app.add_handler(CommandHandler("8ball", general.eight_ball))
     app.add_handler(CommandHandler("song", general.song))
+    app.add_handler(CommandHandler("ai", general.ai_command))
     
     # ── Admin commands ───────────────────────────────────────────────
     app.add_handler(CommandHandler("warn", admin.warn_user))
@@ -46,7 +47,6 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("stats", admin.stats))
     app.add_handler(CommandHandler("broadcast", admin.broadcast))
     app.add_handler(CommandHandler("coin", general.coin))
-    app.add_handler(CommandHandler("ai", general.ai_command))
     
     # ── Name Changer ─────────────────────────────────────────────────
     app.add_handler(CommandHandler("ncstart", admin.ncstart))
