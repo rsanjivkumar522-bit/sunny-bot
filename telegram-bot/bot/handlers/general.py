@@ -199,6 +199,79 @@ async def ai_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
             f"❌ Gemini Error:\n{type(e).__name__}: {e}"
         )
 
+# ── Gemini automatic AI reply ────────────────────────────────────────────────
+
+async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    message = update.message
+
+    if not message or not message.text:
+        return
+
+    # Commands ignore
+    if message.text.startswith("/"):
+        return
+
+    chat_type = message.chat.type
+    text = message.text.strip()
+
+    should_reply = False
+    prompt = text
+
+    # Private chat → AI reply
+    if chat_type == "private":
+        should_reply = True
+
+    # Groups → only when bot is mentioned or replied to
+    elif chat_type in ("group", "supergroup"):
+
+        bot_username = context.bot.username
+
+        # @BotUsername mention
+        if bot_username and f"@{bot_username.lower()}" in text.lower():
+            should_reply = True
+
+            # Mention remove
+            prompt = text.replace(
+                f"@{bot_username}",
+                ""
+            ).strip()
+
+        # Reply to bot's message
+        elif message.reply_to_message:
+            replied = message.reply_to_message
+
+            if (
+                replied.from_user
+                and replied.from_user.id == context.bot.id
+            ):
+                should_reply = True
+
+    if not should_reply:
+        return
+
+    if not prompt:
+        prompt = "Hello"
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=prompt,
+        )
+
+        reply = response.text
+
+        if not reply:
+            return
+
+        # Telegram max message length = 4096
+        for i in range(0, len(reply), 4096):
+            await message.reply_text(reply[i:i + 4096])
+
+        storage.increment_stat("messages_handled")
+
+    except Exception as e:
+        logger.exception("Gemini AI reply error: %s", e)
+
 
 # ── Auto-reply (private chats) ────────────────────────────────────────────────
 
