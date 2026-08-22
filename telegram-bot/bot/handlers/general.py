@@ -161,19 +161,52 @@ async def list_keywords(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     text = "*🔑 Active Keyword Triggers*\n\n" + "\n".join(lines)
     await update.message.reply_text(text, parse_mode="Markdown")
 
-async def ai_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+# ── Gemini AI automatic reply ────────────────────────────────────────────────
+
+async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.message
 
-    if not message:
+    if not message or not message.text:
         return
 
-    if not context.args:
-        await message.reply_text(
-            "🤖 AI ko message do.\n\nExample:\n/ai hello bhai"
-        )
+    # Commands ko ignore karo
+    if message.text.startswith("/"):
         return
 
-    prompt = " ".join(context.args)
+    chat_type = message.chat.type
+    text = message.text.strip()
+
+    # Bot information
+    bot_user = context.bot.username
+    bot_id = context.bot.id
+
+    should_reply = False
+    prompt = text
+
+    # ── Private chat ────────────────────────────────────────────────────────
+    if chat_type == "private":
+        should_reply = True
+
+    # ── Group / Supergroup ─────────────────────────────────────────────────
+    elif chat_type in ("group", "supergroup"):
+
+        # Bot ko @mention kiya hai
+        if bot_user and f"@{bot_user.lower()}" in text.lower():
+            should_reply = True
+            prompt = text.replace(f"@{bot_user}", "").strip()
+
+        # Bot ke message ko reply kiya hai
+        elif message.reply_to_message:
+            replied = message.reply_to_message
+
+            if replied.from_user and replied.from_user.id == bot_id:
+                should_reply = True
+
+    if not should_reply:
+        return
+
+    if not prompt:
+        prompt = "Hello"
 
     try:
         response = client.models.generate_content(
@@ -183,15 +216,26 @@ async def ai_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
         reply = response.text
 
-        if reply:
+        if not reply:
+            await message.reply_text(
+                "❌ Gemini ne empty response diya."
+            )
+            return
+
+        # Telegram message limit
+        if len(reply) <= 4096:
             await message.reply_text(reply)
         else:
-            await message.reply_text("❌ Gemini ne empty response diya.")
+            for i in range(0, len(reply), 4096):
+                await message.reply_text(reply[i:i + 4096])
+
+        storage.increment_stat("messages_handled")
 
     except Exception as e:
-        logger.exception("Gemini AI ERROR: %s", e)
+        logger.exception("Gemini AI reply error: %s", e)
+
         await message.reply_text(
-            f"❌ Gemini Error:\n{type(e).__name__}: {e}"
+            "❌ AI reply nahi kar pa raha abhi."
         )
 
 # ── Auto-reply (private chats) ────────────────────────────────────────────────
