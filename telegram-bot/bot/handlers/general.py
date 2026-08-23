@@ -271,30 +271,3 @@ async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     except Exception as e:
         logger.exception("Gemini AI reply error: %s", e)
-
-
-# ── Auto-reply (private chats) ────────────────────────────────────────────────
-
-async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """
-    Catch-all reply for private chat messages that weren't matched by any
-    other handler. Only fires when AUTO_REPLY_ENABLED is True.
-    """
-    if not config.AUTO_REPLY_ENABLED:
-        return
-
-    message = update.message
-    if not message:
-        return
-
-    # Only auto-reply in private chats
-    if message.chat.type != "private":
-        return
-        
-    # Ignore commands
-    if message.text and message.text.startswith("/"):
-        return
-
-    await message.reply_text(config.AUTO_REPLY_TEXT)
-    storage.increment_stat("messages_handled")
-    logger.debug("Auto-replied to user %s", update.effective_user.id if update.effective_user else "unknown")
