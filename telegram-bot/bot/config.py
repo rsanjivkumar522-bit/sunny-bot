@@ -31,15 +31,6 @@ PORT: int = int(os.environ.get("PORT", 8443))
 # Comma-separated list of Telegram user IDs that can use admin commands
 # e.g.  ADMIN_IDS=123456789,987654321
 ADMIN_IDS: list[int] = _parse_admin_ids(os.environ.get("ADMIN_IDS", ""))
-
-# ── Bot behaviour ────────────────────────────────────────────────────────────
-# Reply to every message in private chats that isn't a command
-AUTO_REPLY_ENABLED: bool = os.environ.get("AUTO_REPLY_ENABLED", "true").lower() == "true"
-AUTO_REPLY_TEXT: str = os.environ.get(
-    "AUTO_REPLY_TEXT",
-    "👋 Thanks for your message! A team member will get back to you soon.",
-)
-
 # Welcome message shown when a new member joins a group
 WELCOME_ENABLED: bool = os.environ.get("WELCOME_ENABLED", "true").lower() == "true"
 WELCOME_TEXT: str = os.environ.get(
