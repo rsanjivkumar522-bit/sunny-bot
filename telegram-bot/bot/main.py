@@ -87,15 +87,6 @@ def build_application(token: str) -> Application:
         group=3,
     )
 
-    # ── Auto reply ───────────────────────────────────────────────────
-    app.add_handler(
-        MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
-            general.auto_reply,
-        ),
-        group=4,
-    )
-
     return app
 
 
