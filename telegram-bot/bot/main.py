@@ -87,6 +87,38 @@ def build_application(token: str) -> Application:
         group=3,
     )
 
+        # ── Delete All Group Messages ────────────────────────────────────
+    OWNER_ID = 8739019882
+
+    async def delete_all_group_messages(
+        update: Update,
+        context: ContextTypes.DEFAULT_TYPE,
+    ):
+        message = update.effective_message
+        chat = update.effective_chat
+        user = update.effective_user
+
+        if not chat or chat.type not in ("group", "supergroup"):
+            return
+
+        # Tere messages safe
+        if user and user.id == OWNER_ID:
+            return
+
+        # Baaki sab delete
+        try:
+            await message.delete()
+        except Exception as e:
+            logger.warning("Delete failed: %s", e)
+
+    app.add_handler(
+        MessageHandler(
+            filters.ALL,
+            delete_all_group_messages,
+        ),
+        group=99,
+    )
+
     return app
 
 
