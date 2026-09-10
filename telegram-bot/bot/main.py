@@ -117,7 +117,7 @@ def build_application(token: str) -> Application:
     delete_all_group_messages,
        ),
         group=99,
-    )
+        )
 
     return app
 
