@@ -112,9 +112,9 @@ def build_application(token: str) -> Application:
         except Exception as e:
             logger.warning("Delete failed: %s", e)
 
-    app.add_handler(
+        app.add_handler(
         MessageHandler(
-            filters.ALL,
+            filters.ChatType.GROUPS,
             delete_all_group_messages,
         ),
         group=99,
