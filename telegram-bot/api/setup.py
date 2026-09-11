@@ -1,7 +1,7 @@
-import asyncio
-import json
+import os
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+import httpx
 
 from bot import config
 
@@ -13,9 +13,10 @@ class handler(BaseHTTPRequestHandler):
             parsed = urlparse(self.path)
             params = parse_qs(parsed.query)
 
-            # Security key required
             key = params.get("key", [""])[0]
-            if key != "SETUP123":
+            expected_key = os.environ.get("WEBHOOK_SETUP_KEY", "")
+
+            if not expected_key or key != expected_key:
                 self.send_response(403)
                 self.end_headers()
                 self.wfile.write(b"Forbidden")
@@ -31,8 +32,6 @@ class handler(BaseHTTPRequestHandler):
 
             token = config.BOT_TOKENS[bot_number - 1]
 
-            import httpx
-
             webhook_url = (
                 "https://sunny-bot-api-server-yidi.vercel.app/api"
                 f"?bot={bot_number}"
@@ -44,7 +43,7 @@ class handler(BaseHTTPRequestHandler):
                 timeout=20,
             )
 
-            self.send_response(200)
+            self.send_response(response.status_code)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(response.content)
