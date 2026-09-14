@@ -32,7 +32,6 @@ class handler(BaseHTTPRequestHandler):
 
             token = config.BOT_TOKENS[bot_number - 1]
 
-            # Naya domain yahan update kiya hai:
             webhook_url = (
                 "https://sunny-bot-api-server-35ty.vercel.app/api"
                 f"?bot={bot_number}"
