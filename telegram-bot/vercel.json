@@ -1,7 +1,16 @@
 {
-  "functions": {
-    "api/**/*.py": {
-      "runtime": "vercel-python@latest"
+  "routes": [
+    {
+      "src": "/api/setup/(.*)",
+      "dest": "/api/setup/index.py"
+    },
+    {
+      "src": "/api/setup",
+      "dest": "/api/setup/index.py"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
     }
-  }
+  ]
 }
