@@ -1,12 +1,12 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/setup",
-      "dest": "/api/setup/index.py"
+      "source": "/api/setup",
+      "destination": "/api/setup/index.py"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
+      "source": "/api",
+      "destination": "/api/index.py"
     }
   ]
 }
