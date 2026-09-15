@@ -33,7 +33,7 @@ class handler(BaseHTTPRequestHandler):
             token = config.BOT_TOKENS[bot_number - 1]
 
             webhook_url = (
-                "https://sunny-bot-api-server-35ty.vercel.app/api"
+                "https://sunny-bot-api-server-728r.vercel.app/api"
                 f"?bot={bot_number}"
             )
 
