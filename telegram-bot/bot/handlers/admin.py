@@ -33,7 +33,7 @@ async def nc_loop(context, bot_id, chat_id, base_name):
     while NC_RUNNING.get(key, False):
         for name in names:
             if not NC_RUNNING.get(key, False):
-                break
+                return
 
             try:
                 await context.bot.set_chat_title(chat_id, name)
