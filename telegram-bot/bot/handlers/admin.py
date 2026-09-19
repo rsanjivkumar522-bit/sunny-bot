@@ -79,16 +79,12 @@ async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     NC_RUNNING[key] = True
 
-    task = asyncio.create_task(
-        nc_loop(
-            context,
-            bot_id,
-            chat_id,
-            base_name,
-        )
-    )
-
-    NC_TASKS[key] = task
+    await nc_loop(
+    context,
+    bot_id,
+    chat_id,
+    base_name,
+)
 
     await update.message.reply_text(
         "✅ Name Changer Started."
