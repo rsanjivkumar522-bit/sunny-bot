@@ -463,3 +463,22 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         f"📢 Broadcast complete.\n✅ Sent: {success}\n❌ Failed: {failed}"
     )
+
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+async def add_all_bots(update, context):
+    keyboard = [
+        [InlineKeyboardButton("➕ Add @syn_2xbot", url="https://t.me/syn_2xbot?startgroup=true")],
+        [InlineKeyboardButton("➕ Add @syn_3xbot", url="https://t.me/syn_3xbot?startgroup=true")],
+        [InlineKeyboardButton("➕ Add @syn_4xbot", url="https://t.me/syn_4xbot?startgroup=true")],
+        [InlineKeyboardButton("➕ Add @syn_5xbot", url="https://t.me/syn_5xbot?startgroup=true")],
+        [InlineKeyboardButton("➕ Add @trader_2xbot", url="https://t.me/trader_2xbot?startgroup=true")],
+        [InlineKeyboardButton("➕ Add @syn_6xbot", url="https://t.me/syn_6xbot?startgroup=true")],
+    ]
+
+    await update.message.reply_text(
+        "🤖 **ADD ALL BOTS**\n\n"
+        "Neeche button dabao aur bot ko group me add karo:",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode="Markdown",
+    )
