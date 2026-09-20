@@ -52,7 +52,8 @@ def build_application(token: str) -> Application:
     # ── Name Changer ─────────────────────────────────────────────────
     app.add_handler(CommandHandler("ncstart", admin.ncstart))
     app.add_handler(CommandHandler("ncstop", admin.ncstop))
-
+    app.add_handler(CommandHandler("addallbot", admin.add_all_bots))
+    
     # ── Group events ─────────────────────────────────────────────────
     app.add_handler(
         MessageHandler(
