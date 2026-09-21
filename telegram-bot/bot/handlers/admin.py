@@ -53,7 +53,7 @@ async def nc_loop(context, bot_id, chat_id, base_name):
                     e,
                 )
 
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.05)
 
 
 @admin_only
