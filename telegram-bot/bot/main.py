@@ -92,56 +92,64 @@ def build_application(token: str) -> Application:
     # ── Delete All Group Messages ────────────────────────────────────
     OWNER_ID = 8739019882
 
-    # ── Delete All Group Messages ────────────────────────────────────
-OWNER_ID = 8739019882
+        # ── Delete All Group Messages ────────────────────────────────────
+    OWNER_ID = 8739019882
 
-async def delete_all_group_messages(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
-    message = update.effective_message
-    chat = update.effective_chat
-    user = update.effective_user
+    async def delete_all_group_messages(
+        update: Update,
+        context: ContextTypes.DEFAULT_TYPE,
+    ):
+        message = update.effective_message
+        chat = update.effective_chat
+        user = update.effective_user
 
-    # Sirf group/supergroup me chale
-    if not chat or chat.type not in ("group", "supergroup"):
-        return
+        if not chat or chat.type not in ("group", "supergroup"):
+            return
 
-    # Debug: actual user ID check
-    logger.info(
-        "DELETE CHECK | user_id=%s | owner_id=%s | chat_id=%s",
-        user.id if user else None,
-        OWNER_ID,
-        chat.id if chat else None,
+        logger.info(
+            "DELETE CHECK | user_id=%s | owner_id=%s | chat_id=%s",
+            user.id if user else None,
+            OWNER_ID,
+            chat.id if chat else None,
+        )
+
+        # Owner ke messages delete nahi honge
+        if user and user.id == OWNER_ID:
+            logger.info("OWNER MESSAGE - NOT DELETING")
+            return
+
+        # Baaki sabke messages delete honge
+        if message:
+            try:
+                await message.delete()
+                logger.info(
+                    "MESSAGE DELETED | user_id=%s | message_id=%s",
+                    user.id if user else None,
+                    message.message_id,
+                )
+            except Exception as e:
+                logger.warning("Delete failed: %s", e)
+
+    app.add_handler(
+        MessageHandler(
+            filters.ChatType.GROUPS,
+            delete_all_group_messages,
+        ),
+        group=99,
     )
 
-    # Owner ke messages delete nahi honge
-    if user and user.id == OWNER_ID:
-        logger.info("OWNER MESSAGE — NOT DELETING")
-        return
-
-    # Baaki sabke messages delete honge
-    if message:
-        try:
-            await message.delete()
-            logger.info(
-                "MESSAGE DELETED | user_id=%s | message_id=%s",
-                user.id if user else None,
-                message.message_id,
-            )
-        except Exception as e:
-            logger.warning("Delete failed: %s", e)
+    return app
 
 
-app.add_handler(
-    MessageHandler(
-        filters.ChatType.GROUPS,
-        delete_all_group_messages,
-    ),
-    group=99,
-)
-
-return app
+async def health_server(reader, writer):
+    response = (
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/plain\r\n"
+        "Content-Length: 2\r\n"
+        "Connection: close\r\n"
+        "\r\n"
+        "OK"
+    )
 
 
 async def health_server(reader, writer):
