@@ -33,7 +33,7 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("8ball", general.eight_ball))
     app.add_handler(CommandHandler("song", general.song))
     app.add_handler(CommandHandler("ai", general.ai_command))
-    
+
     # ── Admin commands ───────────────────────────────────────────────
     app.add_handler(CommandHandler("warn", admin.warn_user))
     app.add_handler(CommandHandler("warns", admin.check_warns))
@@ -48,12 +48,12 @@ def build_application(token: str) -> Application:
     app.add_handler(CommandHandler("stats", admin.stats))
     app.add_handler(CommandHandler("broadcast", admin.broadcast))
     app.add_handler(CommandHandler("coin", general.coin))
-    
+
     # ── Name Changer ─────────────────────────────────────────────────
     app.add_handler(CommandHandler("ncstart", admin.ncstart))
     app.add_handler(CommandHandler("ncstop", admin.ncstop))
     app.add_handler(CommandHandler("addallbot", admin.add_all_bots))
-    
+
     # ── Group events ─────────────────────────────────────────────────
     app.add_handler(
         MessageHandler(
@@ -80,7 +80,7 @@ def build_application(token: str) -> Application:
         group=2,
     )
 
-    # ── Gemini AI ────────────────────────────────────────────────────
+    # ── Gemini AI ─────────────────────────────────────────────────────
     app.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND,
@@ -89,7 +89,7 @@ def build_application(token: str) -> Application:
         group=3,
     )
 
-        # ── Delete All Group Messages ───────────────────────────────
+    # ── Delete All Group Messages ────────────────────────────────────
     OWNER_ID = 8739019882
 
     async def delete_all_group_messages(
@@ -100,14 +100,15 @@ def build_application(token: str) -> Application:
         chat = update.effective_chat
         user = update.effective_user
 
+        # Sirf group/supergroup me chale
         if not chat or chat.type not in ("group", "supergroup"):
             return
 
-        # Owner ke messages safe
+        # Owner ke messages delete nahi honge
         if user and user.id == OWNER_ID:
             return
 
-        # Baaki sabke messages delete
+        # Baaki sabke messages delete honge
         if message:
             try:
                 await message.delete()
@@ -157,7 +158,7 @@ async def main():
 
     logger.info("Health server running on port %s", port)
 
-    # ── Start all 10 bots ────────────────────────────────────────────
+    # ── Start all bots ────────────────────────────────────────────────
     applications = []
 
     for index, token in enumerate(config.BOT_TOKENS, start=1):
