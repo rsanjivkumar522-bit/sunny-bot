@@ -141,7 +141,7 @@ app.add_handler(
     group=99,
 )
 
-    return app
+return app
 
 
 async def health_server(reader, writer):
