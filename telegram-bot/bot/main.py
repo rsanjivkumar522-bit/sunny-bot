@@ -89,7 +89,7 @@ def build_application(token: str) -> Application:
         group=3,
     )
 
-        # ── Delete All Group Messages ────────────────────────────────────
+        # ── Delete All Group Messages ───────────────────────────────
     OWNER_ID = 8739019882
 
     async def delete_all_group_messages(
@@ -103,19 +103,20 @@ def build_application(token: str) -> Application:
         if not chat or chat.type not in ("group", "supergroup"):
             return
 
-        # Tere messages safe
+        # Owner ke messages safe
         if user and user.id == OWNER_ID:
             return
 
-        # Baaki sab delete
-        try:
-            await message.delete()
-        except Exception as e:
-            logger.warning("Delete failed: %s", e)
+        # Baaki sabke messages delete
+        if message:
+            try:
+                await message.delete()
+            except Exception as e:
+                logger.warning("Delete failed: %s", e)
 
-            app.add_handler(
+    app.add_handler(
         MessageHandler(
-            filters.ChatType.GROUPS & ~filters.StatusUpdate.ALL,
+            filters.ChatType.GROUPS,
             delete_all_group_messages,
         ),
         group=99,
