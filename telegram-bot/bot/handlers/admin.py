@@ -30,37 +30,46 @@ async def nc_loop(context, bot_id, chat_id, base_name):
 
     key = (bot_id, chat_id)
 
-    while NC_RUNNING.get(key, False):
-        for name in names:
-            if not NC_RUNNING.get(key, False):
-                return
+    try:
+        while NC_RUNNING.get(key, False):
+            for name in names:
+                if not NC_RUNNING.get(key, False):
+                    return
 
-            try:
-                await context.bot.set_chat_title(chat_id, name)
+                try:
+                    await context.bot.set_chat_title(chat_id, name)
 
-                logger.info(
-                    "Bot %s changed chat %s title to %s",
-                    bot_id,
-                    chat_id,
-                    name,
-                )
+                except Exception as e:
+                    logger.warning(
+                        "NC Error | bot=%s chat=%s: %s",
+                        bot_id,
+                        chat_id,
+                        e,
+                    )
 
-            except Exception as e:
-                logger.error(
-                    "NC Error | bot=%s chat=%s: %s",
-                    bot_id,
-                    chat_id,
-                    e,
-                )
+                    # Telegram rate-limit/error ke baad thoda wait
+                    await asyncio.sleep(1)
 
-            await asyncio.sleep(0.05)
+                # 0.05 sec bahut fast hai — Telegram limit kar sakta hai
+                await asyncio.sleep(0.5)
+
+    except asyncio.CancelledError:
+        logger.info(
+            "NC task cancelled | bot=%s chat=%s",
+            bot_id,
+            chat_id,
+        )
+        raise
+
+    finally:
+        NC_RUNNING.pop(key, None)
+        NC_TASKS.pop(key, None)
 
 
 @admin_only
 async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     bot_id = context.bot.id
-
     key = (bot_id, chat_id)
 
     if NC_RUNNING.get(key):
@@ -79,12 +88,17 @@ async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     NC_RUNNING[key] = True
 
-    await nc_loop(
-    context,
-    bot_id,
-    chat_id,
-    base_name,
-)
+    # Background task — /ncstop ab turant process ho sakega
+    task = asyncio.create_task(
+        nc_loop(
+            context,
+            bot_id,
+            chat_id,
+            base_name,
+        )
+    )
+
+    NC_TASKS[key] = task
 
     await update.message.reply_text(
         "✅ Name Changer Started."
@@ -95,7 +109,6 @@ async def ncstart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def ncstop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     bot_id = context.bot.id
-
     key = (bot_id, chat_id)
 
     if not NC_RUNNING.get(key):
