@@ -89,11 +89,39 @@ def build_application(token: str) -> Application:
         group=3,
     )
 
-    # ── Delete All Group Messages ────────────────────────────────────
+        # ── Auto Delete ON/OFF ────────────────────────────────────────────
     OWNER_ID = 8739019882
+    DELETE_ENABLED = {}
 
-        # ── Delete All Group Messages ────────────────────────────────────
-    OWNER_ID = 8739019882
+    async def del_on(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        user = update.effective_user
+        chat = update.effective_chat
+
+        if not user or user.id != OWNER_ID:
+            return
+
+        if not chat or chat.type not in ("group", "supergroup"):
+            return
+
+        DELETE_ENABLED[chat.id] = True
+
+        if update.message:
+            await update.message.reply_text("🗑️ Auto Delete: ON")
+
+    async def del_off(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        user = update.effective_user
+        chat = update.effective_chat
+
+        if not user or user.id != OWNER_ID:
+            return
+
+        if not chat or chat.type not in ("group", "supergroup"):
+            return
+
+        DELETE_ENABLED[chat.id] = False
+
+        if update.message:
+            await update.message.reply_text("🛑 Auto Delete: OFF")
 
     async def delete_all_group_messages(
         update: Update,
@@ -103,36 +131,33 @@ def build_application(token: str) -> Application:
         chat = update.effective_chat
         user = update.effective_user
 
-        if not chat or chat.type not in ("group", "supergroup"):
+        if not message or not chat:
             return
 
-        logger.info(
-            "DELETE CHECK | user_id=%s | owner_id=%s | chat_id=%s",
-            user.id if user else None,
-            OWNER_ID,
-            chat.id if chat else None,
-        )
+        if chat.type not in ("group", "supergroup"):
+            return
 
-        # Owner ke messages delete nahi honge
+        # Auto delete OFF
+        if not DELETE_ENABLED.get(chat.id, False):
+            return
+
+        # Owner ke messages kabhi delete nahi honge
         if user and user.id == OWNER_ID:
-            logger.info("OWNER MESSAGE - NOT DELETING")
             return
 
-        # Baaki sabke messages delete honge
-        if message:
-            try:
-                await message.delete()
-                logger.info(
-                    "MESSAGE DELETED | user_id=%s | message_id=%s",
-                    user.id if user else None,
-                    message.message_id,
-                )
-            except Exception as e:
-                logger.warning("Delete failed: %s", e)
+        try:
+            await message.delete()
+        except Exception as e:
+            logger.warning("Delete failed: %s", e)
 
+    # Auto Delete commands
+    app.add_handler(CommandHandler("delon", del_on))
+    app.add_handler(CommandHandler("deloff", del_off))
+
+    # Auto Delete handler
     app.add_handler(
         MessageHandler(
-            filters.ChatType.GROUPS,
+            filters.ChatType.GROUPS & ~filters.StatusUpdate.ALL,
             delete_all_group_messages,
         ),
         group=99,
