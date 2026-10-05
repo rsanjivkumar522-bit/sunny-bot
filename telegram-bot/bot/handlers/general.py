@@ -51,7 +51,10 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "/removekeyword — Remove keyword reply\n"
         "/stats — Show bot statistics\n\n"
         "*Owner Only*\n"
-        "/broadcast — Send message to all groups\n",
+        "*Owner Only*\n"
+        "/broadcast — Send message to all groups\n"
+        "/delon — Turn auto-delete ON\n"
+        "/deloff — Turn auto-delete OFF\n",
         parse_mode="Markdown",
     )
 
