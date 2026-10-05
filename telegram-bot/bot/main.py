@@ -89,7 +89,7 @@ def build_application(token: str) -> Application:
         group=3,
     )
 
-        # ── Auto Delete ON/OFF ────────────────────────────────────────────
+            # ── Auto Delete ON/OFF ────────────────────────────────────────────
     OWNER_ID = 8739019882
     DELETE_ENABLED = {}
 
@@ -123,6 +123,10 @@ def build_application(token: str) -> Application:
         if update.message:
             await update.message.reply_text("🛑 Auto Delete: OFF")
 
+    # Auto Delete commands
+    app.add_handler(CommandHandler("delon", del_on))
+    app.add_handler(CommandHandler("deloff", del_off))
+
     async def delete_all_group_messages(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE,
@@ -137,7 +141,7 @@ def build_application(token: str) -> Application:
         if chat.type not in ("group", "supergroup"):
             return
 
-        # Auto delete OFF
+        # Auto Delete OFF
         if not DELETE_ENABLED.get(chat.id, False):
             return
 
@@ -150,11 +154,6 @@ def build_application(token: str) -> Application:
         except Exception as e:
             logger.warning("Delete failed: %s", e)
 
-    # Auto Delete commands
-    app.add_handler(CommandHandler("delon", del_on))
-    app.add_handler(CommandHandler("deloff", del_off))
-
-    # Auto Delete handler
     app.add_handler(
         MessageHandler(
             filters.ChatType.GROUPS & ~filters.StatusUpdate.ALL,
